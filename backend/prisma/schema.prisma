@@ -1,0 +1,78 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("RECEPTIONIST")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id           Int            @id @default(autoincrement())
+  room_number  String         @unique
+  room_type    String
+  floor        String
+  capacity     Int
+  price        Float
+  status       String         @default("AVAILABLE")
+  bookings     Booking[]
+  housekeeping Housekeeping[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model Guest {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String
+  phone       String
+  nationality String
+  address     String
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Booking {
+  id         Int           @id @default(autoincrement())
+  guest_id   Int
+  room_id    Int
+  check_in   DateTime
+  check_out  DateTime
+  status     String        @default("PENDING")
+  guest      Guest         @relation(fields: [guest_id], references: [id])
+  room       Room          @relation(fields: [room_id], references: [id])
+  payments   Payment[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model Payment {
+  id             Int           @id @default(autoincrement())
+  booking_id     Int
+  amount         Float
+  payment_method String
+  payment_date   DateTime      @default(now())
+  booking        Booking       @relation(fields: [booking_id], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Housekeeping {
+  id             Int                @id @default(autoincrement())
+  room_id        Int
+  assigned_staff Int?
+  status         String             @default("DIRTY")
+  room           Room               @relation(fields: [room_id], references: [id])
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}

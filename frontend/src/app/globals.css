@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    border-color: var(--color-slate-200);
+  }
+  
+  .dark * {
+    border-color: var(--color-slate-800);
+  }
+  
+  body {
+    background-color: var(--color-slate-50);
+    color: var(--color-slate-900);
+  }
+  
+  .dark body {
+    background-color: var(--color-slate-950);
+    color: var(--color-slate-50);
+  }
+}
